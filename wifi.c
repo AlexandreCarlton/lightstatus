@@ -29,7 +29,7 @@ static int get_essid(char *name, size_t length)
   return 0;
 }
 
-static int get_quality(unsigned int *signal_strength)
+static int get_quality(uint_fast8_t *signal_strength)
 {
 
   iwrange range; //memset?
@@ -49,7 +49,7 @@ static int get_quality(unsigned int *signal_strength)
     //fprintf(stderr, "Qual: invalid quality.\n");
     return -1;
   }
-  *signal_strength = (unsigned int) (100 * stats.qual.qual / range.max_qual.qual);
+  *signal_strength = (uint_fast8_t) (100 * stats.qual.qual / range.max_qual.qual);
 
   return 0;
 }

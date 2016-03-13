@@ -1,10 +1,11 @@
 #pragma once
 
 #include <stdbool.h>
+#include <stdint.h>
 
 typedef struct {
   bool muted;
-  long volume;
+  uint_fast8_t volume;
 } SoundInfo;
 
 void update_sound_info(SoundInfo *);

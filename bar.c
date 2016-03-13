@@ -64,14 +64,14 @@ void print_sound_info(FILE *file, SoundInfo const * const info)
         break;
       }
     }
-    fprintf(file, "%s %lu", sound_unmuted_icon, info->volume);
+    fprintf(file, "%s %hhu", sound_unmuted_icon, info->volume);
 
   }
 }
 
 void print_packages_info(FILE *file, PackagesInfo const * const info)
 {
-  fprintf(file, "%s %u", packages_icon, info->to_update);
+  fprintf(file, "%s %lu", packages_icon, info->to_update);
 }
 
 void print_datetime_info(FILE *file, DateTimeInfo const * const info)

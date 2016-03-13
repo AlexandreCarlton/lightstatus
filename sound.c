@@ -46,7 +46,7 @@ static bool is_muted(void)
   return muted;
 }
 
-static long get_volume(void)
+static uint_fast8_t get_volume(void)
 {
   long raw_volume = 0;
   long min = 0;
@@ -59,7 +59,7 @@ static long get_volume(void)
     fprintf(stderr, "Error: Unable to retrieve playback volume.\n");
   }
 
-  long volume = 100 * (raw_volume - min) / (max - min);
+  uint_fast8_t volume = (uint_fast8_t) (100 * (raw_volume - min) / (max - min));
   return volume;
 }
 

@@ -4,9 +4,9 @@
 #include "packages.h"
 
 
-static unsigned int count_lines(FILE *fp)
+static uint_fast16_t count_lines(FILE *fp)
 {
-  unsigned int lines = 0;
+  uint_fast16_t lines = 0;
   int c;
   while (!feof(fp)) {
     c = fgetc(fp);
@@ -19,7 +19,7 @@ static unsigned int count_lines(FILE *fp)
 
 void update_packages_info(PackagesInfo *info, FILE *packages_file)
 {
-  unsigned int num_packages = count_lines(packages_file);
+  uint_fast16_t num_packages = count_lines(packages_file);
   info->to_update = num_packages;
 }
 

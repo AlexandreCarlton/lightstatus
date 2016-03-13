@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdint.h>
+
 typedef enum {
   DISCHARGING,
   CHARGING,
@@ -8,7 +10,7 @@ typedef enum {
 
 typedef struct {
   BatteryState state;
-  unsigned int percentage;
+  uint_fast8_t percentage;
 } BatteryInfo;
 
 void update_battery_info(BatteryInfo *);

@@ -49,8 +49,8 @@ static BatteryState get_battery_state(void) {
 }
 
 // We could return -1 on failure.
-static unsigned int get_battery_remaining(void) {
-  unsigned int percentage_remaining = 0;
+static uint_fast8_t get_battery_remaining(void) {
+  uint_fast8_t percentage_remaining = 0;
   unsigned long charge_now = 0;
   unsigned long charge_full = 1;
 
@@ -60,7 +60,7 @@ static unsigned int get_battery_remaining(void) {
   if (file_now && file_full) {
     fscanf(file_now, "%lu\n", &charge_now);
     fscanf(file_full, "%lu\n", &charge_full);
-    percentage_remaining = (unsigned int)(100 * charge_now / charge_full);
+    percentage_remaining = (uint_fast8_t) (100 * charge_now / charge_full);
   }
 
   if (file_now) fclose(file_now);
@@ -72,7 +72,7 @@ static unsigned int get_battery_remaining(void) {
 void update_battery_info(BatteryInfo *info)
 {
   BatteryState state = get_battery_state();
-  unsigned int percentage = get_battery_remaining();
+  uint_fast8_t percentage = get_battery_remaining();
   info->state = state;
   info->percentage = percentage;
 }
