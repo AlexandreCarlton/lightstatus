@@ -9,25 +9,20 @@ OBJECTS = $(SOURCES:%.c=$(OBJECT_DIR)/%.o)
 all: $(EXECUTABLE)
 
 install: $(EXECUTABLE)
-	install -m 644 $(EXECUTABLE) $(INSTALL_DIR)/$(EXECUTABLE)
+	install -D -m 755 $(EXECUTABLE) $(INSTALL_DIR)/bin/$(EXECUTABLE)
 
 uninstall:
-	$(RM) $(INSTALL_PREFIX)/$(EXECUTABLE)
+	$(RM) $(INSTALL_DIR)/bin/$(EXECUTABLE)
 
-#clean:
-#	rm $(OBJECTS)
-#	rmdir $(OBJECT_DIR)
-#	rm $(EXECUTABLE)
+clean:
+	rm $(OBJECTS)
+	rmdir $(OBJECT_DIR)
+	rm $(EXECUTABLE)
 
 
-# Link the executable
 $(EXECUTABLE): $(OBJECTS)
 	$(CC) $(OBJECTS) $(LDFLAGS) -o $@
 
-
-# Source file rules
-# After the first compilation they will be joined with the rules from the
-# dependency files to provide header dependencies
 $(OBJECT_DIR)/%.o: %.c
 	@mkdir -p $(OBJECT_DIR)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
