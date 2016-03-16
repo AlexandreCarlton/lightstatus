@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
   Bar bar = {
     .bspwm = bspwm_init(),
     .wifi = init_wifi_info(),
-    .battery = init_battery_info(),
+    .battery = battery_init(),
     .sound = init_sound_info(),
     .packages = init_packages_info(),
     .datetime = init_datetime_info()
@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
   // Update what we can
   update_sound_info(&bar.sound);
   update_wifi_info(&bar.wifi);
-  update_battery_info(&bar.battery);
+  battery_update(&bar.battery);
   update_datetime_info(&bar.datetime);
 
   // Start the watchers

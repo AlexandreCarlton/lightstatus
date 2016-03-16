@@ -1,6 +1,8 @@
 #pragma once
 
+#include <stdbool.h>
 #include <stdint.h>
+#include <stdio.h>
 
 typedef enum {
   DISCHARGING,
@@ -13,6 +15,13 @@ typedef struct {
   uint_fast8_t percentage;
 } BatteryInfo;
 
-void update_battery_info(BatteryInfo *);
+BatteryInfo battery_init(void);
 
-BatteryInfo init_battery_info(void);
+bool battery_update(BatteryInfo * const);
+
+bool battery_should_display(BatteryInfo const * const);
+
+void battery_print(FILE *, BatteryInfo const * const);
+
+void battery_free(BatteryInfo * const);
+

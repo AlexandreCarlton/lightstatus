@@ -64,16 +64,7 @@ battery_cb(struct ev_loop *loop, ev_timer *w, int revents)
   (void) revents;
   (void) loop;
   BatteryInfo *info = (BatteryInfo *)w->data;
-  BatteryInfo old_info = {
-    .state = info->state,
-    .percentage = info->percentage
-  };
-
-  update_battery_info(info);
-  if (info->state != old_info.state
-      || info->percentage != old_info.percentage) {
-    updated = true;
-  }
+  updated = battery_update(info) || updated;
 }
 
 static void

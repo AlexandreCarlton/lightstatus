@@ -6,31 +6,6 @@
 
 #define ICON_ARRAY_LENGTH(arr) ((sizeof(arr)) / (sizeof(char *)))
 
-void print_battery_info(FILE *file, BatteryInfo const * const info)
-{
-  const char *battery_discharging_icon = battery_discharging_icons[0];
-  unsigned long len_icons = sizeof(battery_discharging_icons) / sizeof(char *);
-
-  for (unsigned long i = 1; i <= len_icons; i++)
-  {
-    if (info->percentage <= i * 100 / len_icons) {
-      battery_discharging_icon = battery_discharging_icons[i - 1];
-      break;
-    }
-  }
-
-  switch (info->state) {
-    case FULL:
-      fprintf(file, "%s 100", battery_full_icon);
-      break;
-    case CHARGING:
-      fprintf(file, "%s %u", battery_charging_icon, info->percentage);
-      break;
-    case DISCHARGING:
-      fprintf(file, "%s %u", battery_discharging_icon, info->percentage);
-      break;
-  }
-}
 
 void print_wifi_info(FILE *file, WifiInfo const * const info)
 {
@@ -97,8 +72,8 @@ void display_bar(FILE *file, Bar const * const bar)
   }
 
 
-  if (bar->battery.state != FULL) {
-    print_battery_info(file, &bar->battery);
+  if (battery_should_display(&bar->battery)) {
+    battery_print(file, &bar->battery);
     fputc(' ', file);
   }
 
@@ -124,5 +99,6 @@ void display_bar(FILE *file, Bar const * const bar)
 void free_bar_resources(Bar * const bar)
 {
   bspwm_free(&bar->bspwm);
+  battery_free(&bar->battery);
   free_sound_resources(&bar->sound);
 }

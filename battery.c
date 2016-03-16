@@ -16,9 +16,14 @@
 
 #include "battery.h"
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+
+#include "config.h"
+#include "icons.h"
+
 
 #define BATTERY_FOLDER "/sys/class/power_supply/BAT0"
 // Possible values of BATTERY_STATUS
@@ -29,7 +34,8 @@
 #define BATTERY_STATUS_LENGTH 12
 
 // Maybe return the error code and modify a state instead?
-static BatteryState get_battery_state(void) {
+static BatteryState get_battery_state(void)
+{
   char status[BATTERY_STATUS_LENGTH];
   BatteryState state = DISCHARGING;
   FILE *file_charging = fopen(BATTERY_FOLDER "/status", "r");
@@ -49,7 +55,8 @@ static BatteryState get_battery_state(void) {
 }
 
 // We could return -1 on failure.
-static uint_fast8_t get_battery_remaining(void) {
+static uint_fast8_t get_battery_remaining(void)
+{
   uint_fast8_t percentage_remaining = 0;
   unsigned long charge_now = 0;
   unsigned long charge_full = 1;
@@ -69,19 +76,61 @@ static uint_fast8_t get_battery_remaining(void) {
   return percentage_remaining;
 }
 
-void update_battery_info(BatteryInfo *info)
+
+bool battery_should_display(BatteryInfo const * const info)
 {
-  BatteryState state = get_battery_state();
-  uint_fast8_t percentage = get_battery_remaining();
-  info->state = state;
-  info->percentage = percentage;
+  return info->state != FULL;
 }
 
-BatteryInfo init_battery_info(void)
+void battery_print(FILE *file, BatteryInfo const * const info)
+{
+  const char *battery_discharging_icon = battery_discharging_icons[0];
+  unsigned long len_icons = sizeof(battery_discharging_icons) / sizeof(char *);
+
+  for (unsigned long i = 1; i <= len_icons; i++)
+  {
+    if (info->percentage <= i * 100 / len_icons) {
+      battery_discharging_icon = battery_discharging_icons[i - 1];
+      break;
+    }
+  }
+
+  switch (info->state) {
+    case FULL:
+      fprintf(file, "%s 100", battery_full_icon);
+      break;
+    case CHARGING:
+      fprintf(file, "%s %u", battery_charging_icon, info->percentage);
+      break;
+    case DISCHARGING:
+      fprintf(file, "%s %u", battery_discharging_icon, info->percentage);
+      break;
+  }
+}
+
+bool battery_update(BatteryInfo * const info)
+{
+  BatteryInfo old_info = {
+    .state = info->state,
+    .percentage = info->percentage
+  };
+  info->state = get_battery_state();
+  info->percentage = get_battery_remaining();
+
+  return (info->state != old_info.state)
+    || (info->percentage != old_info.percentage);
+}
+
+BatteryInfo battery_init(void)
 {
   BatteryInfo info = {
     .state = DISCHARGING,
     .percentage = 0
   };
   return info;
+}
+
+void battery_free(BatteryInfo * const info)
+{
+  (void) info;
 }
