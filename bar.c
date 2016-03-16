@@ -25,25 +25,6 @@ void print_wifi_info(FILE *file, WifiInfo const * const info)
   }
 }
 
-void print_sound_info(FILE *file, SoundInfo const * const info)
-{
-  if (info->muted || info->volume == 0) {
-    fprintf(file, "%s -", sound_muted_icon);
-  } else {
-    const char *sound_unmuted_icon = sound_unmuted_icons[0];
-    unsigned long len_icons = ICON_ARRAY_LENGTH(sound_unmuted_icons);
-    for (unsigned long i = 1; i <= len_icons; i++)
-    {
-      if (info->volume <= i * 100 / len_icons) {
-        sound_unmuted_icon = sound_unmuted_icons[i - 1];
-        break;
-      }
-    }
-    fprintf(file, "%s %hhu", sound_unmuted_icon, info->volume);
-
-  }
-}
-
 void print_packages_info(FILE *file, PackagesInfo const * const info)
 {
   fprintf(file, "%s %lu", packages_icon, info->to_update);
@@ -77,8 +58,9 @@ void display_bar(FILE *file, Bar const * const bar)
     fputc(' ', file);
   }
 
-
-  print_sound_info(file, &bar->sound);
+  if (sound_should_display(&bar->sound)) {
+    sound_print(file, &bar->sound);
+  }
 
   fputc(' ', file);
 
@@ -100,5 +82,5 @@ void free_bar_resources(Bar * const bar)
 {
   bspwm_free(&bar->bspwm);
   battery_free(&bar->battery);
-  free_sound_resources(&bar->sound);
+  sound_free(&bar->sound);
 }

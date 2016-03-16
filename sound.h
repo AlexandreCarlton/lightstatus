@@ -2,14 +2,19 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <stdio.h>
 
 typedef struct {
   bool muted;
   uint_fast8_t volume;
 } SoundInfo;
 
-void update_sound_info(SoundInfo *);
+SoundInfo sound_init(void);
 
-void free_sound_resources(SoundInfo *);
+bool sound_update(SoundInfo * const);
 
-SoundInfo init_sound_info(void);
+bool sound_should_display(SoundInfo const * const);
+
+void sound_print(FILE *, SoundInfo const * const);
+
+void sound_free(SoundInfo * const);

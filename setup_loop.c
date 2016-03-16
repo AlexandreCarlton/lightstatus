@@ -72,17 +72,8 @@ sound_cb(struct ev_loop *loop, ev_timer *w, int revents)
 {
   (void) loop;
   (void) revents;
-
   SoundInfo *info = (SoundInfo *) w->data;
-  SoundInfo old_info = {
-    .muted = info->muted,
-    .volume = info->volume
-  };
-  update_sound_info(info);
-  if (old_info.muted != info->muted
-      || old_info.volume != info->volume) {
-    updated = true;
-  }
+  updated = sound_update(info) || updated;
 }
 
 static void

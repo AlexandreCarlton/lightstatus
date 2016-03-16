@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
     .bspwm = bspwm_init(),
     .wifi = init_wifi_info(),
     .battery = battery_init(),
-    .sound = init_sound_info(),
+    .sound = sound_init(),
     .packages = init_packages_info(),
     .datetime = init_datetime_info()
   };
@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
 
 
   // Update what we can
-  update_sound_info(&bar.sound);
+  sound_update(&bar.sound);
   update_wifi_info(&bar.wifi);
   battery_update(&bar.battery);
   update_datetime_info(&bar.datetime);
