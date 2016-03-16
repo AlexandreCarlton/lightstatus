@@ -6,6 +6,9 @@
 
 #include "wifi.h"
 #include "config.h"
+#include "icons.h"
+
+#define ICON_ARRAY_LENGTH(arr) ((sizeof(arr)) / (sizeof(char *)))
 
 
 static int skfd;
@@ -54,8 +57,20 @@ static int get_quality(uint_fast8_t *signal_strength)
   return 0;
 }
 
-void update_wifi_info(WifiInfo *info)
+WifiInfo wifi_init(void)
 {
+  WifiInfo info = {
+    .signal_strength = 0,
+    .name = ""
+  };
+  return info;
+}
+
+bool wifi_update(WifiInfo * const info)
+{
+  WifiInfo old_info;
+  old_info.signal_strength = info->signal_strength;
+  strncpy(old_info.name, info->name, MAX_ESSID_LENGTH);
 
   if ((skfd = iw_sockets_open()) < 0) {
     //fprintf(stderr, "Could not open iw socket.\n");
@@ -71,19 +86,35 @@ void update_wifi_info(WifiInfo *info)
 
   iw_sockets_close(skfd);
 
+   return (info->signal_strength != old_info.signal_strength)
+     || (strncmp(info->name, old_info.name, MAX_ESSID_LENGTH) != 0);
 }
 
-bool equal_wifi_info(WifiInfo *info1, WifiInfo *info2)
+bool wifi_should_display(WifiInfo const * const info)
 {
-  return ((info1->signal_strength == info2->signal_strength)
-      && (strcmp(info1->name, info2->name) == 0));
+  return info->signal_strength > 0;
 }
 
-WifiInfo init_wifi_info(void)
+void wifi_print(FILE *file, WifiInfo const * const info)
 {
-  WifiInfo info = {
-    .signal_strength = 0,
-    .name = ""
-  };
-  return info;
+  const char *wifi_connected_icon = wifi_connected_icons[0];
+  unsigned long len_icons = sizeof(wifi_connected_icons) / sizeof(char *);
+  for (unsigned long i = 1; i <= len_icons; i++)
+  {
+    if (info->signal_strength <= i * 100 / len_icons) {
+      wifi_connected_icon = wifi_connected_icons[i - 1];
+      break;
+    }
+  }
+  if (info->signal_strength > 0) {
+    fprintf(file, "%s %s", wifi_connected_icon, info->name);
+  } else {
+    fprintf(file, "%s %s", wifi_disconnected_icon, "N/A");
+  }
+
+}
+
+void wifi_free(WifiInfo * const info)
+{
+  (void) info;
 }

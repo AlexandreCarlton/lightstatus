@@ -2,6 +2,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <stdio.h>
 
 #define MAX_ESSID_LENGTH 50
 
@@ -10,8 +11,12 @@ typedef struct {
   char name[MAX_ESSID_LENGTH];
 } WifiInfo;
 
-void update_wifi_info(WifiInfo *);
+WifiInfo wifi_init(void);
 
-bool equal_wifi_info(WifiInfo *, WifiInfo *);
+bool wifi_update(WifiInfo *);
 
-WifiInfo init_wifi_info(void);
+bool wifi_should_display(WifiInfo const * const);
+
+void wifi_print(FILE *, WifiInfo const * const info);
+
+void wifi_free(WifiInfo * const);

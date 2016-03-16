@@ -51,10 +51,7 @@ wifi_cb(struct ev_loop *loop, ev_timer *w, int revents)
 {
   (void) revents;
   WifiInfo *info = (WifiInfo *) w->data;
-  WifiInfo old_info;
-  memcpy(&old_info, info, sizeof(WifiInfo));
-  update_wifi_info(info);
-  updated = !equal_wifi_info(info, &old_info);
+  updated = wifi_update(info) || updated;
   ev_timer_again(loop, w);
 }
 

@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
 
   Bar bar = {
     .bspwm = bspwm_init(),
-    .wifi = init_wifi_info(),
+    .wifi = wifi_init(),
     .battery = battery_init(),
     .sound = sound_init(),
     .packages = init_packages_info(),
@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
 
   // Update what we can
   sound_update(&bar.sound);
-  update_wifi_info(&bar.wifi);
+  wifi_update(&bar.wifi);
   battery_update(&bar.battery);
   update_datetime_info(&bar.datetime);
 
