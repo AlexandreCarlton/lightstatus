@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
   (void) argv;
 
   Bar bar = {
-    .bspwm = init_bspwm_info(),
+    .bspwm = bspwm_init(),
     .wifi = init_wifi_info(),
     .battery = init_battery_info(),
     .sound = init_sound_info(),

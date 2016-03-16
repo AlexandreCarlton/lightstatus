@@ -79,51 +79,13 @@ void print_datetime_info(FILE *file, DateTimeInfo const * const info)
   fprintf(file, "%s %s", time_icon, info->formatted);
 }
 
-void print_bspwm_info(FILE *file, BspwmInfo const * const info)
-{
-  for (unsigned int i = 0; i < info->num_desktops; i++) {
-    BspwmDesktop desktop = info->desktops[i];
-    const char *fg = color_free_fg;
-    const char *bg = color_free_bg;
-    if (desktop.urgent && desktop.focused) {
-      fg = color_focused_urgent_fg;
-      bg = color_focused_urgent_bg;
-    } else if (desktop.urgent && !desktop.focused) {
-      fg = color_urgent_fg;
-      bg = color_urgent_bg;
-    } else if (desktop.occupied && desktop.focused) {
-      fg = color_focused_occupied_fg;
-      bg = color_focused_occupied_bg;
-    } else if (desktop.occupied && !desktop.focused) {
-      fg = color_occupied_fg;
-      bg = color_occupied_bg;
-    } else if (desktop.focused) {
-      fg = color_focused_free_fg;
-      bg = color_focused_free_bg;
-    }
-    fprintf(file, "%%{F%s}%%{B%s} %s %%{B-}%%{F-}", fg, bg, desktop.name);
-  }
-
-  char layout;
-  switch (info->layout) {
-    case TILED:
-      layout = 'T';
-      break;
-    case MONOCLE:
-      layout = 'M';
-      break;
-    default:
-      layout = '_';
-      break;
-  }
-  fprintf(file, "%%{F%s}%%{B%s} %c %%{B-}%%{F-}", color_state_fg, color_state_bg, layout);
-}
-
 void display_bar(FILE *file, Bar const * const bar)
 {
   fprintf(file, "%%{l}");
 
-  print_bspwm_info(file, &bar->bspwm);
+  if (bspwm_should_display(&bar->bspwm)) {
+    bspwm_print(file, &bar->bspwm);
+  }
 
   fprintf(file, "%%{c}%%{r}");
 
@@ -161,6 +123,6 @@ void display_bar(FILE *file, Bar const * const bar)
 
 void free_bar_resources(Bar * const bar)
 {
-  free_bspwm_resources(&bar->bspwm);
+  bspwm_free(&bar->bspwm);
   free_sound_resources(&bar->sound);
 }

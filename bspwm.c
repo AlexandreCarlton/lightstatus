@@ -4,12 +4,16 @@
 #include <string.h>
 
 #include "bspwm.h"
+#include "config.h" // config.h should contain the icons and colors.
+#include "icons.h"
 
 #define MAX_LINE 128
+#define ICON_ARRAY_LENGTH(arr) ((sizeof(arr)) / (sizeof(char *)))
 
 static char delimiter = ':';
 
-static size_t get_num_desktops(char *line) {
+static size_t get_num_desktops(char *line)
+{
 
   size_t count = 0;
   for (char *p = line; *p != '\0'; p++) {
@@ -18,7 +22,7 @@ static size_t get_num_desktops(char *line) {
   return count - 1;
 }
 
-static void update_num_desktops(BspwmInfo *info, char *line)
+static void update_num_desktops(BspwmInfo * const info, char *line)
 {
   size_t num_previous_desktops = info->num_desktops;
   info->num_desktops = get_num_desktops(line);
@@ -34,7 +38,7 @@ static void update_num_desktops(BspwmInfo *info, char *line)
   }
 }
 
-void update_bspwm_info(BspwmInfo *info, char *line)
+bool bspwm_update(BspwmInfo * const info, char * const line)
 {
   update_num_desktops(info, line);
 
@@ -109,9 +113,15 @@ void update_bspwm_info(BspwmInfo *info, char *line)
         break;
     }
   }
+  return true;
 }
 
-void free_bspwm_resources(BspwmInfo *info)
+bool bspwm_should_display(BspwmInfo const * const info)
+{
+  return info->desktops != NULL;
+}
+
+void bspwm_free(BspwmInfo * const info)
 {
   if (info->desktops) {
     free(info->desktops);
@@ -119,7 +129,7 @@ void free_bspwm_resources(BspwmInfo *info)
   }
 }
 
-BspwmInfo init_bspwm_info(void)
+BspwmInfo bspwm_init(void)
 {
   BspwmInfo info = {
    .desktops = NULL,
@@ -127,4 +137,44 @@ BspwmInfo init_bspwm_info(void)
    .num_desktops = 0
   };
   return info;
+}
+
+void bspwm_print(FILE *file, BspwmInfo const * const info)
+{
+  for (unsigned int i = 0; i < info->num_desktops; i++) {
+    BspwmDesktop desktop = info->desktops[i];
+    const char *fg = color_free_fg;
+    const char *bg = color_free_bg;
+    if (desktop.urgent && desktop.focused) {
+      fg = color_focused_urgent_fg;
+      bg = color_focused_urgent_bg;
+    } else if (desktop.urgent && !desktop.focused) {
+      fg = color_urgent_fg;
+      bg = color_urgent_bg;
+    } else if (desktop.occupied && desktop.focused) {
+      fg = color_focused_occupied_fg;
+      bg = color_focused_occupied_bg;
+    } else if (desktop.occupied && !desktop.focused) {
+      fg = color_occupied_fg;
+      bg = color_occupied_bg;
+    } else if (desktop.focused) {
+      fg = color_focused_free_fg;
+      bg = color_focused_free_bg;
+    }
+    fprintf(file, "%%{F%s}%%{B%s} %s %%{B-}%%{F-}", fg, bg, desktop.name);
+  }
+
+  char layout;
+  switch (info->layout) {
+    case TILED:
+      layout = 'T';
+      break;
+    case MONOCLE:
+      layout = 'M';
+      break;
+    default:
+      layout = '_';
+      break;
+  }
+  fprintf(file, "%%{F%s}%%{B%s} %c %%{B-}%%{F-}", color_state_fg, color_state_bg, layout);
 }

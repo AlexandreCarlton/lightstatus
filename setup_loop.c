@@ -42,8 +42,7 @@ bspwm_cb(struct ev_loop *loop, ev_io *w, int revents)
   BspwmInfo *info = (BspwmInfo *) w->data;
   if (fgets(line, BUFSIZE, file) != NULL)
   {
-    update_bspwm_info(info, line);
-    updated = true;
+    updated = bspwm_update(info, line) || updated;
   }
 }
 

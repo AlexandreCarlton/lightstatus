@@ -2,6 +2,7 @@
 
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdio.h>
 
 // Look at subscribe.c for more info
 typedef struct {
@@ -23,10 +24,12 @@ typedef struct {
   BspwmLayout layout;
 } BspwmInfo;
 
-void update_bspwm_info(BspwmInfo *, char *);
+bool bspwm_update(BspwmInfo * const, char *);
 
-void free_bspwm_resources(BspwmInfo *);
+bool bspwm_should_display(BspwmInfo const * const);
 
-BspwmInfo init_bspwm_info(void);
+void bspwm_free(BspwmInfo * const);
 
-void print_bspwm(BspwmInfo);
+BspwmInfo bspwm_init(void);
+
+void bspwm_print(FILE *, BspwmInfo const * const);
