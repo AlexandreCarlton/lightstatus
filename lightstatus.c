@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
     .wifi = wifi_init(),
     .battery = battery_init(),
     .sound = sound_init(),
-    .packages = init_packages_info(),
+    .packages = packages_init(),
     .datetime = init_datetime_info()
   };
 

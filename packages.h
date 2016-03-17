@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 
@@ -9,6 +10,14 @@ typedef struct {
   uint_fast16_t to_update;
 } PackagesInfo;
 
-void update_packages_info(PackagesInfo *, FILE *);
+FILE *get_packages_file(void);
 
-PackagesInfo init_packages_info(void);
+PackagesInfo packages_init(void);
+
+bool packages_update(PackagesInfo *, FILE *);
+
+bool packages_should_display(PackagesInfo const * const);
+
+void packages_print(FILE *, PackagesInfo const * const);
+
+void packages_free(PackagesInfo * const);

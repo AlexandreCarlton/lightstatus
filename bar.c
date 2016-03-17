@@ -6,12 +6,6 @@
 
 #define ICON_ARRAY_LENGTH(arr) ((sizeof(arr)) / (sizeof(char *)))
 
-
-void print_packages_info(FILE *file, PackagesInfo const * const info)
-{
-  fprintf(file, "%s %lu", packages_icon, info->to_update);
-}
-
 void print_datetime_info(FILE *file, DateTimeInfo const * const info)
 {
   fprintf(file, "%s %s", time_icon, info->formatted);
@@ -31,6 +25,7 @@ void display_bar(FILE *file, Bar const * const bar)
 
   if (wifi_should_display(&bar->wifi)) {
     wifi_print(file, &bar->wifi);
+    fputc(' ', file);
   }
 
   if (battery_should_display(&bar->battery)) {
@@ -40,12 +35,11 @@ void display_bar(FILE *file, Bar const * const bar)
 
   if (sound_should_display(&bar->sound)) {
     sound_print(file, &bar->sound);
+    fputc(' ', file);
   }
 
-  fputc(' ', file);
-
-  if (bar->packages.to_update > 0) {
-    print_packages_info(file, &bar->packages);
+  if (packages_should_display(&bar->packages)) {
+    packages_print(file, &bar->packages);
     fputc(' ', file);
   }
 

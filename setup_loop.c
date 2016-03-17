@@ -81,14 +81,8 @@ packages_io_cb(struct ev_loop *loop, ev_io *w, int revents)
 
   FILE *packages_file = fdopen(w->fd, "r");
   PackagesInfo *info = (PackagesInfo *) w->data;
-  PackagesInfo old_info = {
-    .to_update = info->to_update
-  };
-  update_packages_info(info, packages_file);
+  updated = packages_update(info, packages_file) || updated;
   pclose(packages_file);
-  if (old_info.to_update != info->to_update) {
-    updated = true;
-  }
   ev_timer_again(loop, &packages_timer);
 }
 
@@ -161,9 +155,9 @@ void add_callbacks(Bar * const bar, int in_fd, int out_fd)
   ev_init(&sound_watcher, sound_cb);
   sound_watcher.repeat = 1.;
 
-  FILE *packages = popen("checkupdates", "r");
   packages_io_watcher.data = &bar->packages;
-  ev_io_init(&packages_io_watcher, packages_io_cb, fileno(packages), EV_READ);
+  FILE *packages_file = get_packages_file();
+  ev_io_init(&packages_io_watcher, packages_io_cb, fileno(packages_file), EV_READ);
   ev_init(&packages_timer, packages_cb);
   packages_timer.repeat = 5 * 60.;
 
