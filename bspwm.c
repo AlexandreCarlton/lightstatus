@@ -10,16 +10,20 @@
 #define MAX_LINE 128
 #define ICON_ARRAY_LENGTH(arr) ((sizeof(arr)) / (sizeof(char *)))
 
-static char delimiter = ':';
+/* static char delimiter = ':'; */
 
 static size_t get_num_desktops(char *line)
 {
 
   size_t count = 0;
   for (char *p = line; *p != '\0'; p++) {
-     count += (*p == delimiter);
+    if (*p == ':') {
+     count += (p[1] == 'f') || (p[1] == 'F')
+             || (p[1] == 'o') || (p[1] == 'O')
+             || (p[1] == 'u') || (p[1] == 'U');
+    }
   }
-  return count - 1;
+  return count;
 }
 
 static void update_num_desktops(BspwmInfo * const info, char *line)
