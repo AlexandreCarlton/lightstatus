@@ -15,7 +15,7 @@ WARNINGS := -Wall -Wextra \
 			-Wconversion -Wstrict-prototypes
 DISABLED_WARNINGS := -Wno-strict-aliasing
 
-CFLAGS = -std=$(STD) $(WARNINGS) $(DISABLED_WARNINGS) -g -O2
+CFLAGS = -std=$(STD) $(WARNINGS) $(DISABLED_WARNINGS) -Os
 
 LDLIBS = -liw -lev -lasound
 

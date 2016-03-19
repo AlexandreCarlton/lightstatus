@@ -6,7 +6,7 @@ include config.mk
 # from the path, and the build path prepended in its place
 OBJECTS = $(SOURCES:%.c=%.o)
 
-all: $(EXECUTABLE)
+all: $(EXECUTABLE) Makefile
 
 include dependencies.mk
 
