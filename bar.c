@@ -5,7 +5,20 @@
 
 #define ICON_ARRAY_LENGTH(arr) ((sizeof(arr)) / (sizeof(char *)))
 
-void display_bar(FILE *file, Bar const * const bar)
+Bar bar_init(void)
+{
+  Bar bar = {
+    .battery = battery_init(),
+    .bspwm = bspwm_init(),
+    .clock = clock_init(),
+    .packages = packages_init(),
+    .sound = sound_init(),
+    .wifi = wifi_init()
+  };
+  return bar;
+}
+
+void bar_print(FILE *file, Bar const * const bar)
 {
   fprintf(file, "%%{l}");
 
@@ -42,18 +55,19 @@ void display_bar(FILE *file, Bar const * const bar)
     fputc(' ', file);
   }
 
-  fprintf(file, "%%{B-}%%{F-}");
+  fputs("%{B-}%{F-}", file);
 
-  fputs(" \n", file);
+  fputc('\n', file);
 
   fflush(file);
 }
 
-void free_bar_resources(Bar * const bar)
+void bar_free(Bar * const bar)
 {
-  bspwm_free(&bar->bspwm);
   battery_free(&bar->battery);
+  bspwm_free(&bar->bspwm);
   clock_free(&bar->clock);
+  packages_free(&bar->packages);
   sound_free(&bar->sound);
   wifi_free(&bar->wifi);
 }

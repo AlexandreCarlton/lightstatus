@@ -19,6 +19,8 @@ typedef struct {
   ClockInfo clock;
 } Bar;
 
-void display_bar(FILE *, Bar const * const);
+Bar bar_init(void);
 
-void free_bar_resources(Bar * const);
+void bar_print(FILE *, Bar const * const);
+
+void bar_free(Bar * const);

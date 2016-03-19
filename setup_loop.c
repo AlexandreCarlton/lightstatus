@@ -118,7 +118,7 @@ shutdown_cb(struct ev_loop *loop, ev_signal *w, int revents)
 
   // Consider putting this in the cleanup watcher.
   //close(0); // close stdin.
-  free_bar_resources(bar);
+  bar_free(bar);
 }
 
 static  void

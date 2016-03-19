@@ -31,14 +31,7 @@ int main(int argc, char *argv[])
     }
   }
 
-  Bar bar = {
-    .bspwm = bspwm_init(),
-    .wifi = wifi_init(),
-    .battery = battery_init(),
-    .sound = sound_init(),
-    .packages = packages_init(),
-    .clock = clock_init()
-  };
+  Bar bar = bar_init();
 
   struct ev_loop *loop = EV_DEFAULT;
 
