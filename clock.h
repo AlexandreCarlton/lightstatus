@@ -1,12 +1,15 @@
 #pragma once
 
 #include <stdbool.h>
+#include <stdint.h>
 #include <stdio.h>
 
 
 #define TIME_BUFFER_LENGTH 10
 
 typedef struct {
+  uint_fast8_t hours;
+  uint_fast8_t minutes;
   char formatted[TIME_BUFFER_LENGTH];
 } ClockInfo;
 
