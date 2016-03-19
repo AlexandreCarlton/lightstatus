@@ -22,7 +22,6 @@
 #include <unistd.h>
 
 #include "config.h"
-#include "icons.h"
 
 
 #define BATTERY_FOLDER "/sys/class/power_supply/BAT0"

@@ -5,7 +5,6 @@
 #include <unistd.h>
 
 #include "clock.h"
-#include "icons.h"
 #include "config.h"
 
 bool clock_update(ClockInfo * const info)

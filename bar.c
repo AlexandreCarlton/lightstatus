@@ -2,7 +2,6 @@
 
 #include "bar.h"
 #include "config.h"
-#include "icons.h"
 
 #define ICON_ARRAY_LENGTH(arr) ((sizeof(arr)) / (sizeof(char *)))
 

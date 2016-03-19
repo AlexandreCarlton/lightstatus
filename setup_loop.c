@@ -9,7 +9,8 @@
 
 #define BUFSIZE 1024
 
-// TODO we could instead start prepare_display in each callback,
+// TODO we could instead start prepare_display in each callback
+//    (would it be necessary to check if had already been activated?)
 // and prepare_display would then cancel itself on call.
 // Pros:
 //  - Not constantly calling prepare only to have it blank

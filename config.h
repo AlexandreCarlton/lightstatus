@@ -6,6 +6,9 @@
 // It will be necessary to make a script that converts any panel_colors to this
 // so that it will be easy to use other people's colours.
 
+
+#include "icons/siji.h"
+
 static char const wifi_interface[] = "wlp1s0b1";
 
 static char const color_default_fg[]          = "#839496";

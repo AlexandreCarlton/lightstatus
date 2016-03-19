@@ -4,8 +4,7 @@
 #include <string.h>
 
 #include "bspwm.h"
-#include "config.h" // config.h should contain the icons and colors.
-#include "icons.h"
+#include "config.h"
 
 #define MAX_LINE 128
 #define ICON_ARRAY_LENGTH(arr) ((sizeof(arr)) / (sizeof(char *)))

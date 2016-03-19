@@ -5,7 +5,6 @@
 
 #include "packages.h"
 #include "config.h"
-#include "icons.h"
 
 static uint_fast16_t count_lines(FILE *fp)
 {
