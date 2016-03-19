@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
     .battery = battery_init(),
     .sound = sound_init(),
     .packages = packages_init(),
-    .datetime = init_datetime_info()
+    .clock = clock_init()
   };
 
   struct ev_loop *loop = EV_DEFAULT;
@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
   sound_update(&bar.sound);
   wifi_update(&bar.wifi);
   battery_update(&bar.battery);
-  update_datetime_info(&bar.datetime);
+  clock_update(&bar.clock);
 
   // Start the watchers
   start_watchers(loop);

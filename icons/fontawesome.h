@@ -18,6 +18,8 @@ static const char * const sound_muted_icon = "\uf026";
 // Packages
 static const char * const packages_icon = "\uf0ad";
 
-//DateTime
+// Date
 static const char * const date_icon = "\uf073";
-static const char * const time_icon = "\uf017";
+
+// Clock
+static const char * const clock_icon = "\uf017";

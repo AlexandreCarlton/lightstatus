@@ -25,7 +25,7 @@ static ev_timer battery_watcher;
 static ev_timer sound_watcher;
 static ev_timer packages_timer;
 static ev_io packages_io_watcher;
-static ev_periodic datetime_watcher;
+static ev_periodic clock_watcher;
 static ev_signal signal_watcher;
 static ev_prepare prepare_display;
 
@@ -99,12 +99,12 @@ packages_cb(struct ev_loop *loop, ev_timer *w, int revents)
 }
 
 static void
-datetime_cb(struct ev_loop *loop, ev_periodic *w, int revents)
+clock_cb(struct ev_loop *loop, ev_periodic *w, int revents)
 {
   (void) loop;
   (void) revents;
-  DateTimeInfo *info = (DateTimeInfo *) w->data;
-  update_datetime_info(info);
+  ClockInfo *info = (ClockInfo *) w->data;
+  clock_update(info);
   updated = true;
 }
 
@@ -163,9 +163,9 @@ void add_callbacks(Bar * const bar, int in_fd, int out_fd)
 
   // include an offset so that we don't get the time before it changes.
   // TODO Maybe separate into date watcher and time watcher?
-  update_datetime_info(&bar->datetime);
-  datetime_watcher.data = &bar->datetime;
-  ev_periodic_init(&datetime_watcher, datetime_cb, 1., 60., 0);
+  clock_update(&bar->clock);
+  clock_watcher.data = &bar->clock;
+  ev_periodic_init(&clock_watcher, clock_cb, 1., 60., 0);
 
   // Easy way to shut down.
   signal_watcher.data = bar;
@@ -189,7 +189,7 @@ void start_watchers(struct ev_loop *loop)
   ev_timer_again(loop, &sound_watcher);
   ev_io_start(loop, &packages_io_watcher);
   // TODO Make separate watchers for time and date
-  ev_periodic_start(loop, &datetime_watcher);
+  ev_periodic_start(loop, &clock_watcher);
   ev_signal_start(loop, &signal_watcher);
   ev_prepare_start(EV_DEFAULT_ &prepare_display);
 

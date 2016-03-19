@@ -6,11 +6,6 @@
 
 #define ICON_ARRAY_LENGTH(arr) ((sizeof(arr)) / (sizeof(char *)))
 
-void print_datetime_info(FILE *file, DateTimeInfo const * const info)
-{
-  fprintf(file, "%s %s", time_icon, info->formatted);
-}
-
 void display_bar(FILE *file, Bar const * const bar)
 {
   fprintf(file, "%%{l}");
@@ -43,7 +38,10 @@ void display_bar(FILE *file, Bar const * const bar)
     fputc(' ', file);
   }
 
-  print_datetime_info(file, &bar->datetime);
+  if (clock_should_display(&bar->clock)) {
+    clock_print(file, &bar->clock);
+    fputc(' ', file);
+  }
 
   fprintf(file, "%%{B-}%%{F-}");
 
@@ -56,6 +54,7 @@ void free_bar_resources(Bar * const bar)
 {
   bspwm_free(&bar->bspwm);
   battery_free(&bar->battery);
+  clock_free(&bar->clock);
   sound_free(&bar->sound);
   wifi_free(&bar->wifi);
 }

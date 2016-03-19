@@ -2,7 +2,7 @@ EXECUTABLE := lightstatus
 
 CC := clang
 
-SOURCES = lightstatus.c bar.c battery.c bspwm.c datetime.c packages.c setup_loop.c sound.c wifi.c
+SOURCES = lightstatus.c bar.c battery.c bspwm.c clock.c packages.c setup_loop.c sound.c wifi.c
 
 STD := gnu99
 
