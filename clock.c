@@ -35,7 +35,7 @@ bool clock_should_display(ClockInfo const * const info)
 
 void clock_print(FILE * file, ClockInfo const * const info)
 {
-  fprintf(file, "%s %d:%d", clock_icon, info->hours, info->minutes);
+  fprintf(file, "%s %02d:%02d", clock_icon, info->hours, info->minutes);
 }
 
 void clock_free(ClockInfo * const info)
