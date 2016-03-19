@@ -11,7 +11,6 @@
 #include "wifi.h"
 
 typedef struct {
-  //bool updated; // Would be nice if I could access it without expose it.
   BspwmInfo bspwm;
   WifiInfo wifi;
   SoundInfo sound;

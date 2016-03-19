@@ -17,7 +17,6 @@
 //  - No need for global static variable
 // Cons:
 //  - More repetition?
-static bool updated = false;
 static FILE* out_fp;
 
 static ev_io bspwm_watcher;
@@ -43,26 +42,26 @@ bspwm_cb(struct ev_loop *loop, ev_io *w, int revents)
   BspwmInfo *info = (BspwmInfo *) w->data;
   if (fgets(line, BUFSIZE, file) != NULL)
   {
-    updated = bspwm_update(info, line) || updated;
+    bspwm_update(info, line);
   }
 }
 
 static void
 wifi_cb(struct ev_loop *loop, ev_timer *w, int revents)
 {
+  (void) loop;
   (void) revents;
   WifiInfo *info = (WifiInfo *) w->data;
-  updated = wifi_update(info) || updated;
-  ev_timer_again(loop, w);
+  wifi_update(info);
 }
 
 static void
 battery_cb(struct ev_loop *loop, ev_timer *w, int revents)
 {
-  (void) revents;
   (void) loop;
+  (void) revents;
   BatteryInfo *info = (BatteryInfo *)w->data;
-  updated = battery_update(info) || updated;
+  battery_update(info);
 }
 
 static void
@@ -71,7 +70,7 @@ sound_cb(struct ev_loop *loop, ev_timer *w, int revents)
   (void) loop;
   (void) revents;
   SoundInfo *info = (SoundInfo *) w->data;
-  updated = sound_update(info) || updated;
+  sound_update(info);
 }
 
 static void
@@ -82,7 +81,7 @@ packages_io_cb(struct ev_loop *loop, ev_io *w, int revents)
 
   FILE *packages_file = fdopen(w->fd, "r");
   PackagesInfo *info = (PackagesInfo *) w->data;
-  updated = packages_update(info, packages_file) || updated;
+  packages_update(info, packages_file);
   pclose(packages_file);
   ev_timer_again(loop, &packages_timer);
 }
@@ -106,7 +105,6 @@ clock_cb(struct ev_loop *loop, ev_periodic *w, int revents)
   (void) revents;
   ClockInfo *info = (ClockInfo *) w->data;
   clock_update(info);
-  updated = true;
 }
 
 static void
@@ -129,12 +127,7 @@ display_cb(struct ev_loop *loop, ev_prepare *w, int revents)
   (void) revents;
   (void) loop;
   Bar const * const bar = (Bar *) w->data;
-  // Try not checking for updated, see what happens.
-  if (updated) {
-    display_bar(out_fp, bar);
-    updated = false;
-  }
-
+  bar_print(out_fp, bar);
 }
 
 // TODO: How to close off the things?
@@ -189,14 +182,9 @@ void start_watchers(struct ev_loop *loop)
   ev_timer_again(loop, &battery_watcher);
   ev_timer_again(loop, &sound_watcher);
   ev_io_start(loop, &packages_io_watcher);
-  // TODO Make separate watchers for time and date
   ev_periodic_start(loop, &clock_watcher);
   ev_signal_start(loop, &signal_watcher);
-  ev_prepare_start(EV_DEFAULT_ &prepare_display);
+  ev_prepare_start(loop, &prepare_display);
 
 }
 
-void free_loop_resources(void)
-{
-
-}
