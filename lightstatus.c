@@ -1,3 +1,5 @@
+#define _XOPEN_SOURCE 700
+
 #include <ev.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -19,6 +21,16 @@ int main(int argc, char *argv[])
   (void) argc;
   (void) argv;
 
+  FILE *output_file = stdout;
+
+  int opt;
+  while ((opt = getopt(argc, argv, ":o:")) != -1){
+    switch (opt) {
+      case 'o':
+        output_file = fopen(optarg, "w");
+    }
+  }
+
   Bar bar = {
     .bspwm = bspwm_init(),
     .wifi = wifi_init(),
@@ -30,12 +42,7 @@ int main(int argc, char *argv[])
 
   struct ev_loop *loop = EV_DEFAULT;
 
-  FILE *out_fp = fopen("/run/user/1000/lemonbar-fifo", "w");
-  /* out_fp = stdout; */
-
-  // TODO If feeling fancy, could also wait until out_fp is ready before writing to it.
-
-  add_callbacks(&bar, STDIN_FILENO, fileno(out_fp));
+  add_callbacks(&bar, STDIN_FILENO, fileno(output_file));
 
 
   // Update what we can
@@ -53,7 +60,9 @@ int main(int argc, char *argv[])
   //close(STDIN_FILENO);
   //close(STDOUT_FILENO);
 
-  //fclose(out_fp);
+  if (output_file != stdout && output_file != NULL) {
+    fclose(output_file);
+  }
 
   return 0;
 }
