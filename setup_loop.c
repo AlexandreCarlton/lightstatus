@@ -132,10 +132,10 @@ display_cb(struct ev_loop *loop, ev_prepare *w, int revents)
 
 // TODO: How to close off the things?
 // Pass them through?
-void add_callbacks(Bar * const bar, int in_fd, int out_fd)
+void add_callbacks(Bar * const bar, FILE *in, FILE *out)
 {
   bspwm_watcher.data = &bar->bspwm;
-  ev_io_init(&bspwm_watcher, bspwm_cb, in_fd, EV_READ);
+  ev_io_init(&bspwm_watcher, bspwm_cb, fileno(in), EV_READ);
 
   wifi_timer.data = &bar->wifi;
   ev_init(&wifi_timer, wifi_cb);
@@ -169,7 +169,7 @@ void add_callbacks(Bar * const bar, int in_fd, int out_fd)
   // in other words, it's (almost) like it's after all the events that have been called.
   // So we add an update
 
-  out_fp = fdopen(out_fd, "w");
+  out_fp = out;
   prepare_display.data = bar;
   ev_prepare_init(&prepare_display, display_cb);
 

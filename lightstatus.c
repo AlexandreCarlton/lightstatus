@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 
   struct ev_loop *loop = EV_DEFAULT;
 
-  add_callbacks(&bar, STDIN_FILENO, fileno(output_file));
+  add_callbacks(&bar, stdin, output_file);
 
 
   // Update what we can
