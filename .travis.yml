@@ -1,0 +1,18 @@
+
+language: c
+
+compiler:
+  - clang
+  - gcc
+
+script: make
+
+cache:
+  - apt
+
+addons:
+  apt:
+    packages:
+      - libev-dev
+      - libasound2-dev
+      - libiw-dev
