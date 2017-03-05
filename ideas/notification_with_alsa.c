@@ -5,6 +5,9 @@
 #include <ev.h>
 #include <stdio.h>
 
+// TODO:
+// https://github.com/AndrewCooper/auduv/blob/master/auduv.c for more examples
+
 ev_io sound_watcher;
 struct pollfd *pfds;
 static snd_mixer_t *mixer = NULL;

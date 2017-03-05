@@ -9,6 +9,10 @@
 // udevadm monitor --subsystem-match=power_supply --udev --property
 // or /sys/class/power_supply/{AC,BAT0}/uevent
 
+// See
+// - http://ftp.kernel.org/pub/linux/utils/kernel/hotplug/libudev/libudev-udev-monitor.html
+// - https://github.com/robertalks/udev-examples/blob/master/udev_example3.c
+// for more info.
 
 ev_io battery_watcher;
 struct udev *udev;
