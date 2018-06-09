@@ -21,21 +21,11 @@ int main(int argc, char *argv[])
   (void) argc;
   (void) argv;
 
-  FILE *output_file = stdout;
-
-  int opt;
-  while ((opt = getopt(argc, argv, ":o:")) != -1){
-    switch (opt) {
-      case 'o':
-        output_file = fopen(optarg, "w");
-    }
-  }
-
   Bar bar = bar_init();
 
   struct ev_loop *loop = EV_DEFAULT;
 
-  add_callbacks(&bar, stdin, output_file);
+  add_callbacks(&bar, stdin, stdout);
 
 
   // Update what we can
@@ -49,13 +39,6 @@ int main(int argc, char *argv[])
 
   ev_run(EV_DEFAULT_ 0);
   ev_loop_destroy(loop);
-
-  //close(STDIN_FILENO);
-  //close(STDOUT_FILENO);
-
-  if (output_file != stdout && output_file != NULL) {
-    fclose(output_file);
-  }
 
   return 0;
 }
